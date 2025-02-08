@@ -1,7 +1,7 @@
 import express, { json } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
@@ -49,6 +49,20 @@ app.get("/car-services", async (req, res, next) => {
     const data = await servicesCollection.find({}, { projection }).toArray();
     if (!data.length) {
       return next({ status: 404, message: "car services data not found" });
+    }
+    res.status(200).json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/car-services/:id", async (req, res, next) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  try {
+    const data = await servicesCollection.findOne(query);
+    if (!data) {
+      return next({ status: 404, message: "no data found" });
     }
     res.status(200).json({ success: true, data });
   } catch (err) {
@@ -117,7 +131,7 @@ const startServer = async () => {
   await client.db("admin").command({ ping: 1 });
   console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-  return app.listen(port, () =>
+  app.listen(port, () =>
     console.log(`server running on http://localhost:${port}`)
   );
 };
