@@ -70,6 +70,30 @@ app.get("/car-services/:id", async (req, res, next) => {
   }
 });
 
+app.post("/car-services", async (req, res, next) => {
+  const serviceData = req.body;
+
+  if (!serviceData) {
+    console.log("service data not found to post");
+    return;
+  }
+
+  try {
+    const data = await servicesCollection.insertOne(serviceData);
+    if (!data?.insertedId) {
+      return next({
+        status: 401,
+        message: "failed to insert new service data",
+      });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "new service added successfull" });
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.get("/car-products", async (req, res, next) => {
   const { fields } = req.query;
   let projection = {};
