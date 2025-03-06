@@ -3,11 +3,16 @@
   "private": true,
   "type": "module",
   "packageManager": "yarn@4.5.3",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "cloudinary": "^2.5.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "firebase-admin": "^13.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.13.0"
   }
